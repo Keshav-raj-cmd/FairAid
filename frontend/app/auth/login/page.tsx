@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
-import { fetchHealth, login } from "@/lib/api";
+import { fetchHealth, getApiBaseUrl, login } from "@/lib/api";
 import { getSession, setSession } from "@/lib/session";
 import type { UserRole } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
@@ -50,7 +50,8 @@ export default function LoginPage() {
         setBackendHealth("Backend online");
       })
       .catch(() => {
-        setBackendHealth("Backend unreachable at http://127.0.0.1:8000");
+        const url = getApiBaseUrl();
+        setBackendHealth(`Backend unreachable${url ? ` at ${url}` : ""}`);
       });
   }, []);
 

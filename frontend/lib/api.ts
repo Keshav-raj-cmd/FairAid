@@ -35,8 +35,25 @@ export interface HotspotsResponse {
   }>;
 }
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+  if (typeof window !== "undefined") {
+    const isLocalhost =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
+    // In local development, forward directly to local FastAPI server on 8000
+    if (isLocalhost) {
+      return "http://127.0.0.1:8000";
+    }
+    // When deployed (e.g. on Vercel), use relative URLs so rewrites route directly to the backend
+    return "";
+  }
+  return process.env.BACKEND_URL || "http://127.0.0.1:8000";
+}
+
+export const API_BASE_URL = getApiBaseUrl();
 
 export class ApiError extends Error {
   status: number;
@@ -52,7 +69,8 @@ async function fetchJson<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}${path}`, {
     credentials: "include",
     ...options,
   });

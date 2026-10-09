@@ -1,11 +1,10 @@
+import { getApiBaseUrl } from "@/lib/api";
+
 export type GeocodeResult = {
   lat: number;
   lng: number;
   display_name?: string;
 };
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 
 export async function geocodeAddress(address: string): Promise<GeocodeResult | null> {
   const query = address.trim();
@@ -13,8 +12,9 @@ export async function geocodeAddress(address: string): Promise<GeocodeResult | n
     return null;
   }
 
+  const baseUrl = getApiBaseUrl();
   const response = await fetch(
-    `${API_BASE_URL}/platform/geocode?address=${encodeURIComponent(query)}`,
+    `${baseUrl}/platform/geocode?address=${encodeURIComponent(query)}`,
   );
   if (!response.ok) {
     return null;
@@ -33,8 +33,9 @@ export async function geocodeAddress(address: string): Promise<GeocodeResult | n
 }
 
 export async function reverseGeocode(lat: number, lng: number): Promise<string | null> {
+  const baseUrl = getApiBaseUrl();
   const response = await fetch(
-    `${API_BASE_URL}/platform/reverse-geocode?lat=${lat}&lng=${lng}`,
+    `${baseUrl}/platform/reverse-geocode?lat=${lat}&lng=${lng}`,
   );
   if (!response.ok) {
     return null;

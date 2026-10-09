@@ -21,7 +21,43 @@
   },
   "rewrites": [
     {
+      "source": "/platform/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/platform",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/run-allocation",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/allocation-data",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
       "source": "/api/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/docs",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/openapi.json",
       "destination": {
         "service": "app"
       }

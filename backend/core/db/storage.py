@@ -22,7 +22,16 @@ from backend.core.domain import (
     SPECIALIST_LIBRARY,
 )
 
-DB_PATH = Path(__file__).resolve().parents[3] / "data" / "fairaid.db"
+def _resolve_db_path() -> Path:
+    custom_path = os.getenv("FAIRAID_SQLITE_PATH", "").strip()
+    if custom_path:
+        return Path(custom_path)
+    if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        return Path("/tmp") / "fairaid.db"
+    return Path(__file__).resolve().parents[3] / "data" / "fairaid.db"
+
+
+DB_PATH = _resolve_db_path()
 
 
 def _resolve_database_url() -> str:

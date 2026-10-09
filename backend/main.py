@@ -10,8 +10,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-# Ensure SQLite directory exists (CRITICAL for Render)
-os.makedirs("data", exist_ok=True)
+# Ensure SQLite directory exists (CRITICAL for Render; safe fallback on serverless)
+try:
+    os.makedirs("data", exist_ok=True)
+except OSError:
+    pass
 
 from backend.api.routes.allocation import router as allocation_router
 from backend.api.routes.platform import router as platform_router
